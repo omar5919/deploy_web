@@ -1,0 +1,80 @@
+﻿<script type="text/ng-template" id="imagenes.html">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="cerrarOrdenEntrega()">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only">Close</span>
+            </button>
+            <h4 class="modal-title"><i class="fas fa-spinner fa-spin" ng-show="cargando"></i> Imagenes</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
+                    Pregunta: {{data.Pregunta}}<br>
+                    Respuesta: {{data.Respuesta}}<br>
+                </div>
+            </div>
+            <br>
+            <div class="photos">
+                <div ng-repeat="x in adj">
+                    <a ng-click="descargar(x)">
+                        <img ng-src="{{'data:image/png;base64,'+x.arrArchivo}}" height="150" width="150" alt="..." class="img-thumbnail"/>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-white" ng-click="cerrarModal()">Cerrar</button>
+        </div>
+    </div>
+</script>
+<style>
+    .form-control{
+        margin-top: 0 !important;
+    }
+</style>
+<div class="ibox ">
+    <div class="ibox-title">
+        <h5><i class="fas fa-spinner fa-spin" ng-show="cargando"></i> Preguntas Frecuentes</h5>
+    </div>
+    <div class="ibox-content">
+        <ui-select ng-model="pf.Modulo">
+            <ui-select-match placeholder="Buscar en todos los Modulos...">
+                <span>{{$select.selected.Nombre}}</span>
+            </ui-select-match>
+            <ui-select-choices repeat="i in (modulos | filter: $select.search) track by i.Id">
+                <span ng-bind="i.Nombre"></span>
+            </ui-select-choices>
+        </ui-select>
+        <br>
+        <div class="search-form">
+            <div class="input-group">
+                <input ng-model="buscar" type="text" class="form-control form-control-lg" />
+                <div class="input-group-btn">
+                    <button class="btn btn-primary" type="button" ng-click="obtenerTodo()">
+                        Buscar
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div ng-repeat="x in preguntasList">
+            <div class="hr-line-dashed"></div>
+            <div class="search-result">
+                <h3>{{x.Pregunta}}</h3>
+                <p>{{x.Respuesta}}</p>
+                <small><a ng-click="mostrarImagenes(x)">ver imagenes relacionadas</a></small>
+            </div>
+        </div>
+        <div class="text-center">
+            <ul uib-pagination
+                ng-model="bigCurrentPage"
+                total-items="bigTotalItems"
+                max-size="maxSize"
+                num-pages="numPages"
+                class="pagination-sm"
+                boundary-link-numbers="true"
+                ng-change="obtenerTodo()"
+                rotate="false"></ul>
+        </div>
+    </div>
+</div>

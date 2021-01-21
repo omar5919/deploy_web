@@ -1,0 +1,88 @@
+﻿<style>
+    .link-entidad {
+        color: #337ab7 !important;
+    }
+</style>
+<div class="ibox">
+    <div class="ibox-title">
+        <h5><i class="fas fa-spinner fa-spin"
+               ng-if="cargando"></i> Mis Pendientes</h5>
+    </div>
+    <div class="ibox-content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-group" uib-dropdown>
+                    <button id="split-button" type="button" ng-disabled="lista | CantidadSeleccionados"
+                            class="btn btn-danger">
+                        Acción
+                    </button>
+                    <button type="button" ng-disabled="lista | CantidadSeleccionados" class="btn btn-danger"
+                            uib-dropdown-toggle>
+                        <span class="caret"></span>
+                        <span class="sr-only">Split button!</span>
+                    </button>
+                    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="split-button">
+                        <li role="menuitem"><a ng-click="aprobar()">Aprobar</a></li>
+                        <li role="menuitem"><a ng-click="rechazar()">Rechazar</a></li>
+                        <li class="divider"></li>
+                        <li role="menuitem" ng-show="false"><a ng-click="conformidad()">Dar Conformidad</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="input-group" style="display: flex !important;">
+                    <input date-range-picker
+                           class="form-control date-picker"
+                           type="text"
+                           ng-model="filtros.fechas"/>
+                    <span class="input-group-append">
+                        <button type="button" class="btn btn-sm btn-primary" style="padding: 10px 10px !important;"
+                                ng-click="obtener()">Buscar</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th><input type="checkbox" ng-model="all" ng-change="selectAll(all)"/></th>
+                    <th>Código</th>
+                    <th>Descripción</th>
+                    <th>Estado</th>
+                    <th>Sub Estado</th>
+                    <th>Ubicación</th>
+                    <th>F.Registro</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="x in lista">
+                    <td><input type="checkbox" ng-model="x.Selected"/></td>
+                    <td><a href="" class="link-entidad" ng-click="abrirST(x)"><strong>{{x.Codigo}}</strong></a></td>
+                    <td>{{x.DescripcionDetallada}}</td>
+                    <td>{{x.Estado}}</td>
+                    <td>{{x.SubEstado}}</td>
+                    <td>{{x.Ubicacion}}</td>
+                    <td>{{x.FechaRegistro | formatoFechaHoraPeru}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <ul uib-pagination
+            ng-model="bigCurrentPage"
+            total-items="bigTotalItems"
+            max-size="maxSize"
+            num-pages="numPages"
+            class="pagination-sm"
+            boundary-link-numbers="true"
+            ng-change="obtener()"
+            rotate="false"></ul>
+    </div>
+    <div class="ibox-footer">
+
+    </div>
+</div>

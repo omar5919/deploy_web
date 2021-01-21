@@ -1,0 +1,140 @@
+﻿<style>
+    .file-box{
+        padding-left: 0 !important;
+    }
+    .img-eliminar{
+        position: relative;
+    }
+    .adj-padding{
+        padding: 5px;
+    }
+    .adj-horizontal {
+        overflow-x:scroll;
+        white-space: nowrap;
+    }
+</style>
+<div class="ibox ">
+    <div class="ibox-title">
+        <h5><i class="fas fa-spinner fa-spin" ng-show="cargando"></i> Mantenimiento de Preguntas Frecuentes</h5>
+    </div>
+    <div class="ibox-content">
+        <div class="form-group row">
+            <div class="col-lg-12">
+                <button class="btn btn-sm btn-dark" type="button" ng-click="limpiar()">LIMPIAR</button>
+                <button class="btn btn-sm btn-primary" type="button" ng-click="guardarPregunta()">GUARDAR</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group row">
+                    <div class="col-lg-offset-2 col-lg-10">
+                        <input type="checkbox" ng-model="pf.TodosClientes" /> Aplicar a todos los clientes.
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-lg-2 col-form-label">Modulo:</label>
+                    <div class="col-lg-10">
+                        <ui-select ng-model="pf.Modulo">
+                            <ui-select-match placeholder="Seleccione Modulo...">
+                                <span>{{$select.selected.Nombre}}</span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="i in (modulos | filter: $select.search) track by i.Id">
+                                <span ng-bind="i.Nombre"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-lg-2 col-form-label">Pregunta:</label>
+                    <div class="col-lg-10">
+                        <textarea class="form-control" ng-model="pf.Pregunta" placeholder="Ingrese una pregunta" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-lg-2 col-form-label">Respuesta:</label>
+                    <div class="col-lg-10">
+                        <textarea class="form-control" ng-model="pf.Respuesta" placeholder="Ingrese una respuesta" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-lg-2 col-form-label">Adjuntos:</label>
+                    <div class="col-lg-10">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="file-box">
+                                    <div class="file">
+                                        <span class="corner"></span>
+                                        <a ng-click="agregarAdjDestino()">
+                                            <div class="icon">
+                                                <i ng-class="{'fas fa-file-excel': adjuntosFile === undefined ,'fas fa-times':adjuntosFile.size > 200000, 'fas fa-upload': adjuntosFile.size < 200000}"></i>
+                                            </div>
+                                        </a>
+                                        <div class="file-name">
+                                            {{adjuntosFile ? adjuntosFile.name : '--'}}
+                                            <br/>
+                                            <small>{{adjuntosFile ? (adjuntosFile.size | formatomb) : '--'}}</small>
+                                            <div class="row" ng-show="adjuntosFile">
+                                                <div class="col-md-12">
+                                                    <button type="button" class="btn btn-red"
+                                                            ng-click="borrarAdjunto()">Borrar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <input id="adjunto" type="file" file-model="adjuntosFile"/>
+                            </div>
+                        </div>
+                        <div class="adj-horizontal">
+                            <dd class="project-people mb-1" style="display: -webkit-box;">
+                                <div class="text-center" ng-repeat="x in adj">
+                                    <img alt="image" width="150" height="150" class="rounded-circle m-t-xs img-fluid" ng-src="{{'data:image/png;base64,'+x.arrArchivo}}">
+                                    <div class="m-t-xs font-bold" style="padding: 7px;" ng-show="false"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></div>
+                                </div>
+                            </dd>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-sm btn-primary" ng-disabled="mostrarEditar" type="button" ng-click="editar()">EDITAR</button>
+                <br>
+                <br>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Modulo</th>
+                            <th>Pregunta</th>
+                            <th>Respuesta</th>
+                            <th>Estado</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="x in preguntasList">
+                            <td><input type="checkbox" ng-model="item" ng-change="onChange(x)" /></td>
+                            <td><strong>{{x.Modulo}}</strong></td>
+                            <td>{{x.Pregunta}}</td>
+                            <td>{{x.Respuesta}}</td>
+                            <td>{{x.Estado}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <ul uib-pagination
+                    ng-model="bigCurrentPage"
+                    total-items="bigTotalItems"
+                    max-size="maxSize"
+                    num-pages="numPages"
+                    class="pagination-sm"
+                    boundary-link-numbers="true"
+                    ng-change="obtenerTodo()"
+                    rotate="false"></ul>
+            </div>
+        </div>
+    </div>
+</div>

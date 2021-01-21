@@ -1,0 +1,354 @@
+﻿<style>
+    .dropdown-arbol {
+        white-space: nowrap;
+        line-height: 10px;
+        color: #444;
+        text-decoration: none;
+        border-radius: 0px;
+        background-clip: padding-box;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-color: #fff;
+        background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eee), color-stop(0.5, #fff));
+        background-image: -webkit-linear-gradient(center bottom, #eee 0%, #fff 50%);
+        background-image: -moz-linear-gradient(center bottom, #eee 0%, #fff 50%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
+        background-image: linear-gradient(top, #fff 0%, #eee 50%);
+    }
+
+    .panel-group {
+        margin-bottom: 0px;
+    }
+
+    .panel-heading {
+        padding: 5px 10px;
+        border: 1px solid #aaaaaa;
+        border-bottom: 1px solid #aaaaaa !important;
+    }
+    .panel-title {
+        font-size: 12px;
+    }
+    .nav-tabs > li.active > a {
+        color: #555;
+        cursor: default;
+        background-color: #efefef;
+        border: 1px solid #ddd;
+        border-bottom-color: transparent;
+    }
+</style>
+<div class="row">
+    <div class="col-lg-10 animated fadeInDown">
+        <div class="ibox ">
+            <div class="ibox-title">
+                <h5>SOLICITUD DE TRABAJO<span ng-show="sol.codigo">: {{sol.codigo}}</span></h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a ui-sref="rtRegistroSolicitud.inicio" class="dropdown-item dropdown-user">Inicio</a></li>
+                        <li><a ui-sref="rtRegistroSolicitud.ayuda" class="dropdown-item dropdown-user">Ayuda</a></li>
+                        <li ng-show="sol.id"><a class="dropdown-item dropdown-user">Log de Acciones</a></li>
+                        <li ng-show="sol.id"><a class="dropdown-item dropdown-user">Observaciones</a></li>
+                        <li ng-show="sol.id"><a class="dropdown-item dropdown-user">Ver Tiempos</a></li>
+                        <!--<li><a class="dropdown-item dropdown-user" ui-sref="rtRegistroSolicitud.wizard">Wizard</a></li>
+                        <li><a class="dropdown-item dropdown-user" ui-sref="rtRegistroSolicitud.chatboot">ChatBoot</a></li>
+                        <li><a class="dropdown-item dropdown-user"
+                               ui-sref="rtRegistroSolicitud.recurrentes">Recurrentes</a></li>
+                        <li><a class="dropdown-item dropdown-user" ui-sref="rtRegistroSolicitud.arbolinmuebles">Arbol de
+                            Inmuebles</a></li>
+                        <li><a class="dropdown-item dropdown-user">Estadisticas</a></li>
+                        <li><a class="dropdown-item dropdown-user">Graficos</a></li>
+                        <li><a class="dropdown-item dropdown-user">Equipos</a></li>
+                        <li><a class="dropdown-item dropdown-user">Adjuntos</a></li>
+                        <li><a class="dropdown-item dropdown-user" ui-sref="rtRegistroSolicitud.bandeja">Listado de solicitudes</a></li>-->
+                    </ul>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="form-group row">
+                    <div class="col-lg-12">
+                        <button class="btn btn-sm btn-primary" type="button" ng-click="guardarSolicitud()">ENVIAR
+                        </button>
+                        <button type="button" ng-click="limpiar()" class="btn btn-sm btn-dark">LIMPIAR</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div id="valCliente" class="form-group row">
+                            <label class="col-lg-2 col-form-label">Cliente:</label>
+                            <div class="col-lg-10">
+                                <ui-select ng-model="sol.cliente" on-select="cambioCliente($select.selected)">
+                                    <ui-select-match placeholder="Seleccione Cliente...">
+                                        <span>{{$select.selected.Nombre}}</span>
+                                    </ui-select-match>
+                                    <ui-select-choices
+                                            repeat="i in (Clientes | filter: $select.search) track by i.Id">
+                                        <span ng-bind="i.Nombre"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">Inmueble:</label>
+                            <div class="col-lg-10">
+                                <uib-accordion>
+                                    <div uib-accordion-group class="dropdown-arbol" is-open="status.abrirInmuebles">
+                                        <uib-accordion-heading>
+                                            {{inmuebleEdificioNivel.nombre ? inmuebleEdificioNivel.nombre : "Seleccione Inmueble"}}
+                                            <i class="pull-right fas"
+                                               ng-class="{'fa-caret-up': status.abrirInmuebles, 'fa-caret-down': !status.abrirInmuebles}"></i>
+                                        </uib-accordion-heading>
+                                        <div class="input-group">
+                                            <label>
+                                                <input type="text" ng-model="filtro_arbol.buscarInmuebleEdificioNivelModel" ng-change="buscarInmuble(filtro_arbol.buscarInmuebleEdificioNivelModel)"
+                                                       ng-minlength="4"
+                                                       focus-me="status.abrirGrupoUnidad === true"
+                                                       class="form-control" />
+                                            </label>
+                                            <span class="input-group-btn">
+                                                                <button type="button" class="btn btn-ng"
+                                                                        ng-click="buscarInmuble(buscarInmueblesModel)">
+                                                                    <span class="glyphicon glyphicon-search"></span>
+                                                                </button>
+                                                            </span>
+                                        </div>
+                                        <br>
+                                        <div class="spiner-example"
+                                             ng-show="cargando">
+                                            <div class="sk-spinner sk-spinner-circle">
+                                                <div class="sk-circle1 sk-circle"></div>
+                                                <div class="sk-circle2 sk-circle"></div>
+                                                <div class="sk-circle3 sk-circle"></div>
+                                                <div class="sk-circle4 sk-circle"></div>
+                                                <div class="sk-circle5 sk-circle"></div>
+                                                <div class="sk-circle6 sk-circle"></div>
+                                                <div class="sk-circle7 sk-circle"></div>
+                                                <div class="sk-circle8 sk-circle"></div>
+                                                <div class="sk-circle9 sk-circle"></div>
+                                                <div class="sk-circle10 sk-circle"></div>
+                                                <div class="sk-circle11 sk-circle"></div>
+                                                <div class="sk-circle12 sk-circle"></div>
+                                            </div>
+                                        </div>
+                                        <treecontrol class="tree-classic"
+                                                     tree-model="arbolInmueblesModel"
+                                                     expanded-nodes="expandedNodes"
+                                                     on-selection="status.abrirInmuebles=false;seleccionArbolInmuebles(node, expanded, $parentNode, $index, $first, $middle, $last, $odd, $even, $path)">
+                                            {{node.label}}
+                                        </treecontrol>
+                                    </div>
+                                </uib-accordion>
+                                <span class="form-text m-b-none" ng-show="inmuebleEdificioNivel.nombreEdificio">
+                                    <br>
+                                    {{inmuebleEdificioNivel.nombreEdificio}} - {{inmuebleEdificioNivel.nombreNivel}}
+                                </span>
+                                <br>
+                                <span ng-show="inmuebleEdificioNivel.nombreAmbiente" class="form-text m-b-none">
+                                    <br>
+                                    {{inmuebleEdificioNivel.nombreAmbiente}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-class="{'col-md-5': imagen_solicitante.length > 0 , 'col-md-7': imagen_solicitante.length === 0}">
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">Solicitante:</label>
+                            <div class="col-md-10">
+                                <ui-select ng-model="sol.solicitante"
+                                           on-select="obtenerImagenSolicitante($select.selected)">
+                                    <ui-select-match placeholder="Seleccione Solicitante...">
+                                        <span>{{$select.selected.Nombre}}</span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="i in Solicitante track by $index"
+                                                       refresh="obtenerSolicitante($select.search)" refresh-delay="0">
+                                        <span ng-bind="i.Nombre"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div id="valCorreo" class="form-group row">
+                            <label class="col-lg-2 col-form-label">Correo:</label>
+                            <div class="col-lg-10">
+                                <input type="text" ng-model="sol.correo" placeholder="Correo" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">Teléfono:</label>
+                            <div class="col-lg-10">
+                                <input type="text" ng-model="sol.telefono" placeholder="Teléfono" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2" ng-if="imagen_solicitante.length > 0">
+                        <div class="form-group row">
+                            <img ng-src="{{'data:image/png;base64,'+imagen_solicitante[0].arrArchivo}}" height="120px" width="120px"
+                                 alt="..." class="img-circle center-block"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <uib-tabset>
+                    <uib-tab index="0" heading="Datos Generales" select="datosGenerales()">
+                        <div class="panel-body">
+                            <form>
+                                <div class="row">
+                                    <div ng-class="{'col-md-10': imagen_solicitante.length > 0 , 'col-md-12': imagen_solicitante.length === 0}" >
+                                        <div class="form-group row">
+                                            <label class="col-lg-2 col-form-label">Tipo de Solicitud:</label>
+                                            <div class="col-md-4">
+                                                <ui-select ng-model="sol.tiposolicitud"
+                                                           on-select="cambioTipoSolicitud($select.selected)">
+                                                    <ui-select-match placeholder="Seleccione Tipo Solicitud...">
+                                                        <span>{{$select.selected.Nombre}}</span>
+                                                    </ui-select-match>
+                                                    <ui-select-choices
+                                                            repeat="i in (TipoSolicitud | filter: $select.search) track by i.Id">
+                                                        <span ng-bind="i.Nombre"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                            <div class="col-md-6"></div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-2 col-form-label">Grupo/Unidad:</label>
+                                            <div class="col-lg-10">
+                                                <uib-accordion>
+                                                    <div uib-accordion-group class="dropdown-arbol" is-open="status.abrirGrupoUnidad">
+                                                        <uib-accordion-heading>
+                                                            {{grupoUnidad.nombregrupo ? grupoUnidad.nombregrupo + ' - ' + grupoUnidad.nombreunidad : "Seleccione Grupo/Unidad"}}
+                                                            <i class="pull-right fas"
+                                                               ng-class="{'fa-caret-up': status.abrirGrupoUnidad, 'fa-caret-down': !status.abrirGrupoUnidad}"></i>
+                                                        </uib-accordion-heading>
+                                                        <div class="input-group">
+                                                            <input type="text" 
+                                                                   ng-model="filtro_arbol.buscarGrupoUnidadModel"
+                                                                   ng-change="buscarGrupoUnidad(filtro_arbol.buscarGrupoUnidadModel)"
+                                                                   ng-minlength="4"
+                                                                   focus-me="status.abrirGrupoUnidad === true"
+                                                                   class="form-control">
+                                                            <span class="input-group-btn">
+                                                                <button type="button" class="btn btn-ng"
+                                                                        ng-click="buscarGrupoUnidad(buscarGrupoUnidadModel)">
+                                                                    <span class="glyphicon glyphicon-search"></span>
+                                                                </button>
+                                                            </span>
+                                                        </div>
+                                                        <br>
+                                                        <div class="spiner-example"
+                                                             ng-show="cargandoGrupoUnidad">
+                                                            <div class="sk-spinner sk-spinner-circle">
+                                                                <div class="sk-circle1 sk-circle"></div>
+                                                                <div class="sk-circle2 sk-circle"></div>
+                                                                <div class="sk-circle3 sk-circle"></div>
+                                                                <div class="sk-circle4 sk-circle"></div>
+                                                                <div class="sk-circle5 sk-circle"></div>
+                                                                <div class="sk-circle6 sk-circle"></div>
+                                                                <div class="sk-circle7 sk-circle"></div>
+                                                                <div class="sk-circle8 sk-circle"></div>
+                                                                <div class="sk-circle9 sk-circle"></div>
+                                                                <div class="sk-circle10 sk-circle"></div>
+                                                                <div class="sk-circle11 sk-circle"></div>
+                                                                <div class="sk-circle12 sk-circle"></div>
+                                                            </div>
+                                                        </div>
+                                                        <treecontrol class="tree-classic"
+                                                                     tree-model="arbolGrupoUnidadModel"
+                                                                     expanded-nodes="expandedNodes"
+                                                                     on-selection="status.abrirGrupoUnidad=false;seleccionArbolGrupoUnidad(node, expanded, $parentNode, $index, $first, $middle, $last, $odd, $even, $path)">
+                                                            {{node.label}}
+                                                        </treecontrol>
+                                                    </div>
+                                                </uib-accordion>
+                                                <span ng-show="grupoUnidad.nombreproblema" class="form-text m-b-none">
+                                                    <br>
+                                                    Clasificación del Problema: {{grupoUnidad.nombreproblema}}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-2 col-form-label">Descripcion detallada:</label>
+                                            <div class="col-lg-10">
+                                                <textarea ng-model="sol.descripcion" class="form-control"
+                                                          placeholder="Descripción..." rows="2"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row" ng-if="listaAprobadores.length > 0">
+                                            <label class="col-lg-2 col-form-label">Aprobadores:</label>
+                                            <div class="col-md-10">
+                                                <ui-select multiple ng-model="sol.aprobadores">
+                                                    <ui-select-match placeholder="Seleccione los Aprobadores...">
+                                                        {{$item.Nombre}}
+                                                    </ui-select-match>
+                                                    <ui-select-choices
+                                                            repeat="i in (listaAprobadores | filter: $select.search) track by i.Id">
+                                                        <span ng-bind="i.Nombre"></span>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row"
+                                             ng-show="validarGrupoUnidadMantenimiento.EsObligatorioAdjuntarFormato">
+                                            <div class="col-lg-offset-2 col-lg-10">
+                                                <div class="i-checks"><label> <input type="checkbox"
+                                                                                     ng-model="validarGrupoUnidadMantenimiento.valor"><i></i>
+                                                    He cumplido con adjuntar el archivo solicitado para este tipo de
+                                                    solicitud</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-2 col-form-label">Adjuntos:</label>
+                                            <div class="col-md-10">
+                                                <ng-dropzone class="dropzone" ng-model="adjuntos" options="dzOptions"
+                                                             callbacks="dzCallbacks"
+                                                             methods="dzMethods"></ng-dropzone>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </uib-tab>
+                    <uib-tab index="1" heading="Equipos" select="getDocumentos(1)" ng-show="Equipos.length > 0">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <label class="col-lg-2 col-form-label">Equipos:</label>
+                                        <div class="col-lg-10">
+                                            <ui-select multiple ng-model="sol.equipos"
+                                                       close-on-select="false" title="Equipos">
+                                                <ui-select-match placeholder="Seleccione equipos...">{{$item.Nombre}}</ui-select-match>
+                                                <ui-select-choices repeat="i in (Equipos | filter: $select.search) track by i.Id">
+                                                    {{i.Nombre}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </uib-tab>
+                    <uib-tab index="2" heading="Log Acciones" ng-show="false" select="getDocumentos(1)">
+                        <div class="panel-body">
+                            <h1>Log de acciones</h1>
+                        </div>
+                    </uib-tab>
+                    <uib-tab index="3" heading="Observaciones" ng-show="false" select="getDocumentos(1)">
+                        <div class="panel-body">
+                            <h1>Equipos</h1>
+                        </div>
+                    </uib-tab>
+                </uib-tabset>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2 animated slideInDown" ui-view="opcionesSolicitudView"></div>
+</div>

@@ -1,0 +1,144 @@
+﻿<div class="row">
+    <div class="col-md-12">
+        <div class="ibox">
+            <div class="ibox-title">
+                <h5>Reportes</h5>
+            </div>
+            <div class="ibox-content">
+                <div class="spiner-example" ng-show="cargando">
+                    <div class="sk-spinner sk-spinner-circle">
+                        <div class="sk-circle1 sk-circle"></div>
+                        <div class="sk-circle2 sk-circle"></div>
+                        <div class="sk-circle3 sk-circle"></div>
+                        <div class="sk-circle4 sk-circle"></div>
+                        <div class="sk-circle5 sk-circle"></div>
+                        <div class="sk-circle6 sk-circle"></div>
+                        <div class="sk-circle7 sk-circle"></div>
+                        <div class="sk-circle8 sk-circle"></div>
+                        <div class="sk-circle9 sk-circle"></div>
+                        <div class="sk-circle10 sk-circle"></div>
+                        <div class="sk-circle11 sk-circle"></div>
+                        <div class="sk-circle12 sk-circle"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label">Rango de fechas para extraer:</label>
+                                    <div class="col-lg-8">
+                                        <input date-range-picker
+                                               class="form-control date-picker"
+                                               type="text"
+                                               ng-model="filtros_extraer.fechas"/>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <button type="button" class="btn btn-edi" ng-click="exportar()">EXPORTAR
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Solicitudes y Kilos transportados atendidas por área</h5>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label">Fechas:</label>
+                                    <div class="col-lg-10">
+                                        <input date-range-picker
+                                               class="form-control date-picker"
+                                               type="text"
+                                               ng-model="filtros.fechas"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <button type="button" class="btn btn-edi" ng-click="buscarRpt1()">Buscar</button>
+                            </div>
+                        </div>
+                        <canvas id="rpt1"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Cumplimiento por areas y Provincias</h5>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label">Fechas:</label>
+                                    <div class="col-lg-10">
+                                        <input date-range-picker
+                                               class="form-control date-picker"
+                                               type="text"
+                                               ng-model="filtros2.fechas"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <button type="button" class="btn btn-edi" ng-click="buscarRpt2()">Buscar</button>
+                            </div>
+                        </div>
+                        <canvas id="rpt2"></canvas>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Cuenta de cumplimiento</h5>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label">Fechas:</label>
+                                    <div class="col-lg-10">
+                                        <input date-range-picker
+                                               class="form-control date-picker"
+                                               type="text"
+                                               ng-model="filtros3.fechas"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <button type="button" class="btn btn-edi" ng-click="buscarRpt3()">Buscar</button>
+                            </div>
+                        </div>
+                        <canvas id="rpt3"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Grafico de encuesta</h5>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="col-lg-2 col-form-label">Fechas:</label>
+                                    <div class="col-lg-10">
+                                        <input date-range-picker
+                                               class="form-control date-picker"
+                                               type="text"
+                                               ng-model="filtros4.fechas"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <button type="button" class="btn btn-edi" ng-click="buscarRpt4()">Buscar</button>
+                            </div>
+                        </div>
+                        <canvas id="rpt4"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

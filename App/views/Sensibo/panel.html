@@ -1,0 +1,365 @@
+﻿<style>
+    .dropdown-arbol {
+        white-space: nowrap;
+        line-height: 10px;
+        color: #444;
+        text-decoration: none;
+        border-radius: 0px;
+        background-clip: padding-box;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-color: #fff;
+        background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #eee), color-stop(0.5, #fff));
+        background-image: -webkit-linear-gradient(center bottom, #eee 0%, #fff 50%);
+        background-image: -moz-linear-gradient(center bottom, #eee 0%, #fff 50%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0);
+        background-image: linear-gradient(top, #fff 0%, #eee 50%);
+    }
+
+    .panel-group {
+        margin-bottom: 0px;
+    }
+
+    .panel-heading {
+        padding: 5px 10px;
+        border: 1px solid #aaaaaa;
+        border-bottom: 1px solid #aaaaaa !important;
+    }
+
+    .panel-title {
+        font-size: 12px;
+    }
+
+    .nav-tabs > li.active > a {
+        color: #555;
+        cursor: default;
+        background-color: #efefef;
+        border: 1px solid #ddd;
+        border-bottom-color: transparent;
+    }
+
+    .btn-default {
+        color: #000;
+        background-color: #f6f6f6 !important;
+        border-color: #aaaaaa !important;
+    }
+
+    .input-group .form-control {
+        border: 1px solid #aaaaaa !important;
+    }
+
+    .input-group-addon {
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 0;
+        color: #010101;
+        text-align: center;
+        border-radius: 4px;
+        padding: 10px;
+        border-bottom: 1px solid #aaa;
+        border-top: 1px solid #aaa;
+    }
+
+    a.power {
+        text-shadow: 0px 1px 1px rgba(250, 250, 250, 0.1);
+        font-size: 32pt;
+        display: inline-block;
+        position: relative;
+        text-decoration: none;
+        box-shadow: 0px 1px 0px 0px rgb(34, 34, 34),
+        0px 5px 10px 0px rgb(17, 17, 17),
+        inset 0px 1px 1px 0px rgba(250, 250, 250, .2),
+        inset 0px -12px 35px 0px rgba(0, 0, 0, .5);
+        width: 70px;
+        height: 70px;
+        border: 0;
+        color: rgb(37, 37, 37);
+        border-radius: 35px;
+        text-align: center;
+        line-height: 79px;
+        background-color: rgb(20 184 188);
+
+        transition: color 350ms ease, text-shadow 350ms;
+        -o-transition: color 350ms ease, text-shadow 350ms;
+        -moz-transition: color 350ms ease, text-shadow 350ms;
+        -webkit-transition: color 350ms ease, text-shadow 350ms;
+    }
+
+    a.power:before {
+        content: "";
+        width: 80px;
+        height: 80px;
+        display: block;
+        z-index: -2;
+        position: absolute;
+        background-color: rgb(26, 27, 29);
+        left: -5px;
+        top: -2px;
+        border-radius: 40px;
+        box-shadow: 0px 1px 0px 0px rgba(250, 250, 250, 0.1),
+        inset 0px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    a.power:active {
+        box-shadow: 0px 0px 0px 0px rgb(34, 34, 34),
+        0px 3px 7px 0px rgb(17, 17, 17),
+        inset 0px 1px 1px 0px rgba(250, 250, 250, .2),
+        inset 0px -10px 35px 5px rgba(0, 0, 0, .5);
+        background-color: rgb(83, 87, 93);
+        top: 3px;
+    }
+
+    a.power.on {
+        box-shadow: 0px 0px 0px 0px rgb(34, 34, 34),
+        0px 3px 7px 0px rgb(17, 17, 17),
+        inset 0px 1px 1px 0px rgba(250, 250, 250, .2),
+        inset 0px -10px 35px 5px rgba(0, 0, 0, .5);
+        background-color: rgb(44 105 155);
+        top: 3px;
+        color: #fff;
+        text-shadow: 0px 0px 3px rgb(250, 250, 250);
+    }
+
+    a.power:active:before, a.power.on:before {
+        top: -5px;
+        background-color: rgb(26, 27, 29);
+        box-shadow: 0px 1px 0px 0px rgba(250, 250, 250, 0.1),
+        inset 0px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Styling the Indicator light */
+    a.power + span {
+        display: block;
+        width: 8px;
+        height: 8px;
+        background-color: rgb(226, 0, 0);
+        box-shadow: inset 0px 1px 0px 0px rgba(250, 250, 250, 0.5),
+        0px 0px 3px 2px rgba(226, 0, 0, 0.5);
+        border-radius: 4px;
+        clear: both;
+        position: absolute;
+        bottom: 0;
+        left: 42%;
+        transition: background-color 350ms, box-shadow 700ms;
+        -o-transition: background-color 350ms, box-shadow 700ms;
+        -moz-transition: background-color 350ms, box-shadow 700ms;
+        -webkit-transition: background-color 350ms, box-shadow 700ms;
+    }
+
+    a.power.on + span {
+        box-shadow: inset 0px 1px 0px 0px rgba(250, 250, 250, 0.5),
+        0px 0px 3px 2px rgba(135, 187, 83, 0.5);
+        background-color: rgb(135, 187, 83);
+    }
+
+    .label {
+        display: inherit !important;
+        padding: 7px 5px 5px !important;
+    }
+
+    .apagado {
+        color: #777;
+    }
+
+    .prendido {
+        color: red;
+    }
+
+    .navy-bg,
+    .bg-primary {
+        white-space: initial !important;
+    }
+
+    .active2, .inactive {
+        font-size: 26px;
+        cursor: pointer;
+    }
+
+    .active2, .inactive {
+        font-size: 26px;
+        cursor: pointer;
+    }
+
+    i.active2 {
+        color: rgb(20 184 188);
+    }
+
+    i.inactive {
+        color: #d9534f;
+    }
+</style>
+<div class="row">
+    <div class="col-lg-12 animated fadeInDown">
+        <div class="ibox ">
+            <div class="ibox-title">
+                <h5>SENSIBO</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">Cliente:</label>
+                            <div class="col-lg-5">
+                                <ui-select ng-model="filtros.cliente" on-select="cambioCliente($select.selected)">
+                                    <ui-select-match placeholder="Seleccione Cliente...">
+                                        <span>{{$select.selected.Nombre}}</span>
+                                    </ui-select-match>
+                                    <ui-select-choices
+                                            repeat="i in (Clientes | filter: $select.search) track by i.Id">
+                                        <span ng-bind="i.Nombre"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-lg-5">
+                                <button type="button" class="btn btn-edi" ng-click="buscar()">BUSCAR</button>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-2 col-form-label">Inmueble:</label>
+                            <div class="col-lg-10">
+                                <uib-accordion>
+                                    <div uib-accordion-group class="dropdown-arbol" is-open="status.abrirInmuebles">
+                                        <uib-accordion-heading>
+                                            {{inmuebleEdificioNivel.nombre ? inmuebleEdificioNivel.nombre : "Seleccione Inmueble"}}
+                                            <i class="pull-right fas"
+                                               ng-class="{'fa-caret-up': status.abrirInmuebles, 'fa-caret-down': !status.abrirInmuebles}"></i>
+                                        </uib-accordion-heading>
+                                        <div class="input-group">
+                                            <input type="text"
+                                                   ng-model="buscarInmueblesModel"
+                                                   ng-change="buscarInmuble(buscarInmueblesModel)"
+                                                   ng-minlength="4"
+                                                   focus-me="status.abrirGrupoUnidad === true"
+                                                   class="form-control">
+                                            <span class="input-group-btn">
+                                                                <button type="button" class="btn btn-ng"
+                                                                        ng-click="buscarInmuble(buscarInmueblesModel)">
+                                                                    <span class="glyphicon glyphicon-search"></span>
+                                                                </button>
+                                                            </span>
+                                        </div>
+                                        <br>
+                                        <div class="spiner-example"
+                                             ng-show="cargando">
+                                            <div class="sk-spinner sk-spinner-circle">
+                                                <div class="sk-circle1 sk-circle"></div>
+                                                <div class="sk-circle2 sk-circle"></div>
+                                                <div class="sk-circle3 sk-circle"></div>
+                                                <div class="sk-circle4 sk-circle"></div>
+                                                <div class="sk-circle5 sk-circle"></div>
+                                                <div class="sk-circle6 sk-circle"></div>
+                                                <div class="sk-circle7 sk-circle"></div>
+                                                <div class="sk-circle8 sk-circle"></div>
+                                                <div class="sk-circle9 sk-circle"></div>
+                                                <div class="sk-circle10 sk-circle"></div>
+                                                <div class="sk-circle11 sk-circle"></div>
+                                                <div class="sk-circle12 sk-circle"></div>
+                                            </div>
+                                        </div>
+                                        <treecontrol class="tree-classic"
+                                                     tree-model="arbolInmueblesModel"
+                                                     expanded-nodes="expandedNodes"
+                                                     on-selection="status.abrirInmuebles=false;seleccionArbolInmuebles(node, expanded, $parentNode, $index, $first, $middle, $last, $odd, $even, $path)">
+                                            {{node.label}}
+                                        </treecontrol>
+                                    </div>
+                                </uib-accordion>
+                                <span class="form-text m-b-none" ng-show="inmuebleEdificioNivel.nombreEdificio">
+                                    <br>
+                                    {{inmuebleEdificioNivel.nombreEdificio}} - {{inmuebleEdificioNivel.nombreNivel}}
+                                </span>
+                                <span ng-show="inmuebleEdificioNivel.nombreAmbiente" class="form-text m-b-none">
+                                    <br>
+                                    {{inmuebleEdificioNivel.nombreAmbiente}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <ram-touch-spin type="text" vertical="false" prefix="Global:" postfix="°C" min="17" max="35" ng-model="tiempoGlobal"></ram-touch-spin>
+                            </div>
+                            <div class="col-md-4">
+                                <div style="text-align: center;vertical-align: middle;">
+                                    <span style="vertical-align: super;">Off</span>
+                                    <i class="fa fa-toggle-on" ng-model="isActive" ng-class="isActive?'active2':'fa-rotate-180 inactive'" ng-click="isActive=!isActive" />
+                                    <span style="vertical-align: super;">On</span>
+                                    <br>
+                                    <br>
+                                    <a class="power" disabled="true" ng-class="{'power': !estadoGlobal, 'power on': estadoGlobal}"
+                                       ng-click="estadoGlobal=!estadoGlobal;encenderEquipos()"><i class="fas fa-power-off"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-12">
+                        <div class="i-checks"><label> <input type="checkbox" ng-model="eqGlobal.todos" ng-change="seleccionarTodos()"><i></i> Seleccionar todos los equipos.</label></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="spiner-example" ng-show="cargandoEquipos">
+                        <div class="sk-spinner sk-spinner-circle">
+                            <div class="sk-circle1 sk-circle"></div>
+                            <div class="sk-circle2 sk-circle"></div>
+                            <div class="sk-circle3 sk-circle"></div>
+                            <div class="sk-circle4 sk-circle"></div>
+                            <div class="sk-circle5 sk-circle"></div>
+                            <div class="sk-circle6 sk-circle"></div>
+                            <div class="sk-circle7 sk-circle"></div>
+                            <div class="sk-circle8 sk-circle"></div>
+                            <div class="sk-circle9 sk-circle"></div>
+                            <div class="sk-circle10 sk-circle"></div>
+                            <div class="sk-circle11 sk-circle"></div>
+                            <div class="sk-circle12 sk-circle"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3" ng-repeat="x in equipos">
+                        <div class="widget style1 navy-bg">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="checkbox" ng-model="x.check" ng-change="validarTodos()" />
+                                </div>
+                                <div class="col-md-6">
+                                    <i ng-click="encenderEquipo(x)"
+                                       ng-class="{'fas fa-power-off fa-2x prendido': x.EstaEncendidoElEquipo, 'fas fa-power-off fa-2x apagado' : !x.EstaEncendidoElEquipo}"
+                                       style="float:right;"></i>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="text-center">
+                                        <h3 class="font-bold">{{x.TemperaturaEquipo ? x.TemperaturaEquipo + '°C' : '--'}}</h3>
+                                        <i class="fas fa-air-conditioner fa-4x"></i>
+                                        <br>
+                                        <br>
+                                        <span ng-class="{'label label-success': x.EstaActivoDispositivoSensibo, 'label label-default': !x.EstaActivoDispositivoSensibo}">{{x.EstaActivoDispositivoSensibo ? "En Linea" : "Fuera de Linea"}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <span>{{x.NombreEquipo}}</span>
+                                    <br>
+                                    <small>{{x.Edificio}} - {{x.Nivel}}</small>
+                                    <h5 class="font-bold">
+                                        {{x.TemperaturaAmbiente ? x.TemperaturaAmbiente + '' : '--'}}°C &nbsp;-  {{x.HumedadAmbiente ? x.HumedadAmbiente + ' %' : '--'}} <i
+                                            class="fas fa-thermometer-three-quarters"></i></h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

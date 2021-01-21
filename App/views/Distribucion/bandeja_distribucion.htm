@@ -1,0 +1,229 @@
+﻿<style>
+    .star-small {
+        color: yellow;
+        border: 2px solid yellow;
+        background-color: #fff;
+    }
+
+    .star-big {
+        color: yellow;
+        font-size: 40px;
+    }
+
+    .star-big:focus {
+        outline: auto;
+        outline-color: white;
+    }
+
+    .star-big span:focus {
+        outline: auto;
+        outline-color: white;
+    }
+</style>
+<script type="text/ng-template" id="calificar.html">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" ng-click="cerrar()">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only">Close</span>
+            </button>
+            <h4 class="modal-title">GESTIÓN DE DISTRIBUCIÓN <strong>{{ticket.data.Codigo}}</strong></h4>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="../../../Assets/img/mibanco/chica.png" width="200" alt="">
+                </div>
+                <div class="col-md-8">
+                    <p>Con la finalidad de mejorar el servicio de Courier, por favor califica tu satisfacción en base al
+                        servicio recibido sobre la Orden de Entrega {{ticket.data.Codigo}} referente a
+                        '{{ticket.data.DescripcionItem}}'.</p>
+                    <p>Elije la cantidad de estrellas que representa tu nivel de satisfacción.</p>
+
+                    <div class="text-center">
+                        <span class="star-big" uib-rating ng-model="calificacion.puntaje" max="max"
+                              read-only="isReadonly"
+                              on-leave="overStar = null"
+                              titles="['Muy Insatisfecho','Insatisfecho','Neutro','Satisfecho','Muy Satisfecho']"
+                              aria-labelledby="default-rating"></span>
+                    </div>
+
+                    <div class='success-box text-center'>
+                        <div class='clearfix'></div>
+                        <strong>{{rate | calificacion}}</strong>
+                        <div class='clearfix'></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>Si lo deseas, ingresa un comentario que nos ayude a seguir mejorando. {{rate}}</p>
+                            <textarea ng-model="calificacion.obs" class="form-control" rows="4"></textarea>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="text-center">
+                                <button type="button" ng-disabled="!calificacion.puntaje" ng-click="enviar()"
+                                        class="btn btn-lg btn-success">ENVIAR
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+
+        </div>
+    </div>
+</script>
+<div class="row">
+    <div class="col-md-12">
+        <div class="ibox">
+            <div class="ibox-title">
+                <h5><span ng-if="cargando"><i class="fas fa-spinner fa-spin"></i></span>
+                    {{tipo !== 1 ? 'Mis Solicitudes' : 'Consulta de Solicitudes'}}</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label">Código de Solicitud:</label>
+                            <div class="col-lg-8">
+                                <input type="text" ng-model="filtro.codigo" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label">Agencia Origen:</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group row" ng-show="false">
+                            <label class="col-lg-4 col-form-label">Ubigeo Destino:</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label">Rango de fechas:</label>
+                            <div class="col-lg-8">
+                                <input date-range-picker
+                                       class="form-control date-picker"
+                                       readonly="readonly"
+                                       type="text"
+                                       ng-model="filtro.fechas"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label">Solicitante:</label>
+                            <div class="col-lg-8">
+                                <ui-select ng-model="filtro.solicitante" ng-disabled="tipo !== 1">
+                                    <ui-select-match placeholder="Seleccione Solicitante..." allow-clear="true">
+                                        <span>{{$select.selected.Nombre}}</span>
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="i in Solicitante track by $index"
+                                                       refresh="obtenerSolicitante($select.search)" refresh-delay="0">
+                                        <span ng-bind="i.Nombre"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-4 col-form-label">Estado:</label>
+                            <div class="col-lg-8">
+                                <ui-select ng-model="filtro.estado"
+                                           on-select="seleccionarEstado($select.selected)">
+                                    <ui-select-match placeholder="Seleccione Estado...">
+                                        <span>{{$select.selected.Nombre}}</span>
+                                    </ui-select-match>
+                                    <ui-select-choices
+                                            repeat="i in (Estados | filter: $select.search) track by i.Id">
+                                        <span ng-bind="i.Nombre"></span>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-12">
+                                <div>
+                                    <label>
+                                        <input type="checkbox" ng-model="filtro.anulados"/> Mostrar anulados
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group row">
+                            <div class="col-lg-12">
+                                <button type="button" class="btn btn-edi" ng-click="buscar()">Buscar</button>
+                                <button type="button" class="btn btn-edi" ng-click="nuevo()">Nuevo Ticket</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button class="btn btn-default btn-primary" type="button" ng-click="calificar()">Calificar
+                        </button>
+                        <br>
+                        <br>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Nro.Solicitud</th>
+                                    <th>Tipo Servicio</th>
+                                    <th>Prioridad</th>
+                                    <th>Solicitante</th>
+                                    <th>Estado</th>
+                                    <th>F.Registro</th>
+                                    <th>F.Estimada</th>
+                                    <th>F.Entrega</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="x in lista">
+                                    <td><input type="checkbox" ng-model="x.Selected"/></td>
+                                    <td><a href="" class="link-entidad" ng-click="abrir(x)"><i
+                                            class="fas fa-star star-small" ng-if="x.Calificacion !== null"></i><strong>
+                                        {{x.Codigo}}</strong></a></td>
+                                    <td>{{x.TipoServicio}}</td>
+                                    <td>{{x.Prioridad}}</td>
+                                    <td>{{x.Solicitante}}</td>
+                                    <td>{{x.Estado}}</td>
+                                    <td>{{x.FechaRegistro | formatoFechaHoraPeru}}</td>
+                                    <td>{{x.FechaEstimadaAtencion | formatoFechaHoraPeru}}</td>
+                                    <td>{{x.FechaAtencion | formatoFechaHoraPeru}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <ul uib-pagination
+                            ng-model="bigCurrentPage"
+                            total-items="bigTotalItems"
+                            max-size="maxSize"
+                            class="pagination-sm"
+                            ng-change="obtenerBandeja()"
+                            boundary-link-numbers="true"
+                            rotate="false"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ibox-footer">
+                2020
+            </div>
+        </div>
+    </div>
+</div>
